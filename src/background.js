@@ -1,8 +1,12 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, ipcMain, Notification, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import { readdir } from 'fs/promises';
+import path from 'path'
+import os from 'os';
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready
@@ -10,16 +14,30 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
+async function getFileNames(path) {
+    const files = await readdir(path);
+    return files;
+}
+
+function showNotification(title, body) {
+  const notification = {
+    title: title,
+    body: body
+  }
+  new Notification(notification).show()
+}
+
 async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
+      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+      contextIsolation: false,
+      preload: path.join(__dirname, 'preload.js'),
     }
   })
 
@@ -32,6 +50,28 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
+
+  ipcMain.handle('dark-mode:toggle', () => {
+    if (nativeTheme.shouldUseDarkColors) {
+      nativeTheme.themeSource = 'light'
+    } else {
+      nativeTheme.themeSource = 'dark'
+    }
+    return nativeTheme.shouldUseDarkColors
+  })
+
+  ipcMain.handle('showNotification', async (event, props) => {
+    showNotification(props.title, props.body);
+  })
+
+  ipcMain.handle('getFileNames', async (event, props) => {
+    const fileNames = await getFileNames(props.path);
+    return fileNames;
+  })
+
+  ipcMain.handle('getUserInfo', async (event) => {
+    return os.userInfo();
+  })
 }
 
 // Quit when all windows are closed.
