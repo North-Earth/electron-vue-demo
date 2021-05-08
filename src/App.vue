@@ -1,12 +1,11 @@
 <template>
   <div class="flex w-screen h-screen bg-blue-400">
-    <div class="w-60 bg-red-400">
-      <Sidebar :userName="userName" />
-    </div>
-    <div class="flex-grow bg-green-400">
-      <div class="h-max grid grid-rows-3 grid-flow-col gap-4">
-
-      </div>
+    <Sidebar @changeWorkspace="changeWorkspace" :isDisabled="isDisabledSidebar"/>
+    <!-- <div class="flex-none w-60 bg-red-400">
+      <Start :userName="userName" />
+    </div> -->
+    <div class="flex-grow overflow-y-auto">
+      <component :is="workspaceName"></component>
     </div>
     <!-- <div class="h-full grid grid-rows-3 grid-flow-col gap-4">
       <div class="row-span-3 w-24 bg-red-400">Side</div>
@@ -34,26 +33,33 @@
 </template>
 
 <script>
-//import HelloWorld from './components/HelloWorld.vue'
-import Sidebar from "./components/Sidebar.vue";
-//import Example from "./components/Sidebar.vue";
+import Sidebar from "./components/sidebar/Sidebar.vue";
+import Home from "./components/home/Home.vue";
 
 export default {
   name: "App",
   components: {
-    //HelloWorld,
     Sidebar,
+    Home,
   },
   methods: {
+    changeWorkspace(workspace) {
+      this.workspaceName = workspace.name;
+    },
     showNotification() {
       const props = { title: "Title", body: "Body" };
       window.ipcRenderer.invoke("showNotification", props);
     },
     getFileNames() {
-      const props = { path: this.path };
+      const props = { path: "/Applications" };
       window.ipcRenderer.invoke("getFileNames", props).then((result) => {
-        this.fileNames = result;
+        this.files = result;
       });
+    },
+    test() {
+      console.log(Sidebar);
+      console.log(Sidebar.data());
+      console.log(Sidebar.data.componentName);
     },
     getUserName() {
       console.log(window);
@@ -66,15 +72,12 @@ export default {
   },
   data() {
     return {
-      simpleText: "Example",
-      userName: window.userInfo.username,
-      path: "",
-      fileNames: [],
+      workspaceName: "Home",
+      isDisabledSidebar: false,
     };
   },
 };
 </script>
 
 <style>
-
 </style>
