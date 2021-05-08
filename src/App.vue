@@ -1,27 +1,48 @@
 <template>
-  <Example :text="simpleText" />
-  <h2>Alloha, {{ userName }}</h2>
-  <input v-model="path" placeholder="Path" />
-  <p>Path is: {{ path }}</p>
-  <button @click="getFileNames()">Get Files</button><br /><br />
-  <button @click="showNotification()">Show Notification</button><br /><br />
-  <button @click="getUserName()">Show User Name</button>
-  <ul>
-    <li v-for="fileName in fileNames" :key="fileName">
-      {{ fileName }}
-    </li>
-  </ul>
+  <div class="flex w-screen h-screen bg-blue-400">
+    <div class="w-60 bg-red-400">
+      <Sidebar :userName="userName" />
+    </div>
+    <div class="flex-grow bg-green-400">
+      <div class="h-max grid grid-rows-3 grid-flow-col gap-4">
+
+      </div>
+    </div>
+    <!-- <div class="h-full grid grid-rows-3 grid-flow-col gap-4">
+      <div class="row-span-3 w-24 bg-red-400">Side</div>
+      <div class="col-span-2 bg-yellow-400">Header</div>
+      <div class="row-span-2 col-span-2 bg-green-400">
+        <div class="overflow-visible h-24 ...">
+          Lorem ipsum dolor sit amet...
+        </div>
+        <Example :text="simpleText" />
+        <h2>Alloha, {{ userName }}</h2>
+        <input v-model="path" placeholder="Path" />
+        <p>Path is: {{ path }}</p>
+        <button @click="getFileNames()">Get Files</button><br /><br />
+        <button @click="showNotification()">Show Notification</button
+        ><br /><br />
+        <button @click="getUserName()">Show User Name</button>
+        <ul>
+          <li v-for="fileName in fileNames" :key="fileName">
+            {{ fileName }}
+          </li>
+        </ul>
+      </div>
+    </div> -->
+  </div>
 </template>
 
 <script>
 //import HelloWorld from './components/HelloWorld.vue'
-import Example from "./components/Example.vue";
+import Sidebar from "./components/Sidebar.vue";
+//import Example from "./components/Sidebar.vue";
 
 export default {
   name: "App",
   components: {
     //HelloWorld,
-    Example,
+    Sidebar,
   },
   methods: {
     showNotification() {
@@ -36,7 +57,7 @@ export default {
     },
     getUserName() {
       console.log(window);
-      
+
       window.ipcRenderer.invoke("getUserInfo").then((result) => {
         console.log(result);
         this.userName = result.username;
@@ -55,12 +76,5 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>

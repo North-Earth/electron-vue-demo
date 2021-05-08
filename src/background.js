@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, ipcMain, Notification, BrowserWindow } from 'electron'
+import { app, protocol, ipcMain, nativeTheme, Notification, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { readdir } from 'fs/promises';
