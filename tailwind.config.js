@@ -21,17 +21,29 @@ module.exports = {
       gray: colors.coolGray,
       red: colors.red,
       yellow: colors.amber,
-      //green: colors.emerald,
+      green: colors.emerald,
       blue: colors.blue,
       indigo: colors.indigo,
       purple: colors.violet,
       pink: colors.pink,
 
-      green: {
-        light: '#aaefdf',
-        dark: '#244b48',
-        darkest: '#0d1d1c',
+      gradients: {
+        greenStart: '#00B712',
+        greenEnd: '#5AFF15',
       },
+      test001: {
+        copmlite: '#aaefdf',
+        notComplite: '#244b48',
+        background: '#0d1d1c',
+      },
+      temp: {
+        pink: {
+          100: '#C6426E',
+          200: '#ad5389',
+        },
+        indigo: '#3c1053',
+        purple: '#642B73',
+      }
     },
     spacing: {
       px: '1px',
